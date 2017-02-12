@@ -1,0 +1,16 @@
+{% block content %}
+
+<div class="confirmation-box">
+    <p>{{ message }}</p>
+    <div>
+        <form action="{{ action_link }}" method="post">{% csrf_token %}
+            <input type="hidden" name="current" value="{{ current }}" />
+            <input type="submit" name="answer" value="No" />
+        </form>
+        <form action="{{ action_link }}" method="post">{% csrf_token %}
+            <input type="submit" name="answer" value="Yes" />
+        </form>
+    </div>
+</div>
+
+{% endblock %}

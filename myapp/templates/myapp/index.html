@@ -1,0 +1,38 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}" />
+<div class="addressbook">
+    <h1>Addressbook</h1>
+    <table border="1">
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+        </tr>
+        {%for user in addressList %}
+        <tr>
+            <td>{{user.name}}</td>
+            <td>{{user.email}}</td>
+        </tr>
+        {%endfor%}
+    </table>
+</div>
+<p>
+<div class="adddiv">
+    <form method="post" action="/myapp/add/">
+        {% csrf_token %} {{ form}}
+        <input type="submit" name="add" value="Add" />
+    </form>
+    <br>
+    <form method="post" action="/myapp/upload/" enctype="multipart/form-data">{% csrf_token %}
+        <input type="file" name="file" accept="text/csv"/>
+        <input type="submit" name="submit" value="Upload CSV" />
+    </form>
+</div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
