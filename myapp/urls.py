@@ -5,4 +5,5 @@ urlpatterns = [
     url(r'^$', views.addressbook),
     url(r'^add/', views.add),
     url(r'^upload/', views.upload),
+    url(r'^continue/', views.continueProcessCSV),
 ]

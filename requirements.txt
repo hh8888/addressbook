@@ -1,0 +1,7 @@
+autopep8==1.2.4
+Django==1.10.5
+pep8==1.7.0
+psycopg2==2.6.2
+virtualenv==15.1.0
+virtualenvwrapper-win==1.2.1
+wheel==0.26.0
