@@ -9,8 +9,12 @@ from django.contrib import messages
 from .forms import AddForm#, UploadFileForm
 from django.core.files.storage import FileSystemStorage
 from django.template.context_processors import csrf
+from django.http import HttpResponse
 
 #import pdb; pdb.set_trace()
+
+EmailCol = 0
+NameCol = 1
 
 def addressbook(request):
     form = AddForm()
@@ -45,7 +49,7 @@ def upload(request):
                 handle_uploaded_file(csvfile)
                 reader = csv.reader(codecs.iterdecode(csvfile, 'utf-8'))
             except:
-                return HttpResponse("You need a proper csv file.")
+                return HttpResponse("You need a proper csv file withe first line 'email,name'.")
         else:
             return HttpResponse("You need to select a csv file.")
     count = 0
@@ -56,6 +60,8 @@ def upload(request):
     return addressbook(request)
 
 def continueProcessCSV(request):
+    global EmailCol
+    global NameCol
     count = 0
     currentRow = int(request.POST["current"])
     # single add through form
@@ -74,10 +80,10 @@ def continueProcessCSV(request):
         for row in reader:
             if count==currentRow :
                 if 'Yes' in request.POST:
-                    updateRecord(email=row[0], name=row[1])
-                    messages.info(request, 'Updated %s.' % row[0])
+                    updateRecord(email=row[EmailCol], name=row[NameCol])
+                    messages.info(request, 'Updated %s.' % row[EmailCol])
                 elif 'No' in request.POST:
-                    messages.info(request, 'Skiped %s.' % row[0])
+                    messages.info(request, 'Skiped %s.' % row[EmailCol])
             elif count > currentRow:
                 if not handleRow(row, count):
                     return askConfirm(row, count, request)
@@ -86,19 +92,26 @@ def continueProcessCSV(request):
     return addressbook(request)
 
 def ifExist(row):
-    return address.objects.filter(email=row[0]).count()>0
+    global EmailCol
+    return address.objects.filter(email=row[EmailCol]).count()>0
 
 def handleRow(row, currentRowIndex):
+    global EmailCol
+    global NameCol
     if currentRowIndex == 0: #is csv header
+        if row[0].lower()=='name':
+            EmailCol = 1
+            NameCol = 0
         return True
     if ifExist(row):    # existed
         return False
     else:
-        addRecord(row)  # add new
+        addRecord(email=row[EmailCol], name=row[NameCol])  # add new
         return True
 
 def askConfirm(row, currentRowIndex, request):
-    message = 'Found existed record %s, override?' % row[0]
+    global EmailCol
+    message = 'Found existed record %s, override?' % row[EmailCol]
     current = currentRowIndex
     action_link = "/myapp/continue/"
     return render(request, 'myapp/confirm.html', locals())
@@ -117,3 +130,4 @@ def handle_uploaded_file(f):
     for chunk in f.chunks():
         destination.write(chunk)
     destination.close()
+
