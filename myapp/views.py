@@ -54,7 +54,10 @@ def upload(request):
             return HttpResponse("You need to select a csv file.")
     count = 0
     for row in reader:
-        if not handleRow(row, count):
+        if count==0 and row[0].lower()!='email':
+            messages.info(request, 'CSV format should be:"email, name"')
+            return addressbook(request)
+        if not handleRow(row, count, request):
             return askConfirm(row, count, request)
         count += 1
     return addressbook(request)
@@ -85,7 +88,7 @@ def continueProcessCSV(request):
                 elif 'No' in request.POST:
                     messages.info(request, 'Skiped %s.' % row[EmailCol])
             elif count > currentRow:
-                if not handleRow(row, count):
+                if not handleRow(row, count, request):
                     return askConfirm(row, count, request)
             count += 1
     messages.info(request, 'CSV processed.')
@@ -95,7 +98,7 @@ def ifExist(row):
     global EmailCol
     return address.objects.filter(email=row[EmailCol]).count()>0
 
-def handleRow(row, currentRowIndex):
+def handleRow(row, currentRowIndex, request):
     global EmailCol
     global NameCol
     if currentRowIndex == 0: #is csv header

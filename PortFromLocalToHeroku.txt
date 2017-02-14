@@ -15,7 +15,7 @@ heroku logs
 
 
 heroku run python manage.py migrate
-
+heroku config -s
 
 setting.py:
 
