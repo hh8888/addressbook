@@ -1,0 +1,32 @@
+virtualenv venv
+venv\Scripts\activate
+
+heroku create <project name>
+
+git add.
+git commit -m "blah"
+git push heroku master
+
+pip freeze>requirements.txt
+
+heroku login
+heroku run
+heroku logs
+
+
+heroku run python manage.py migrate
+
+
+setting.py:
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
+import dj_database_url
+
+DATABASES['default'] =  dj_database_url.config()
+
+
+urls.py:
+
+urlpatterns += staticfiles_urlpatterns()
