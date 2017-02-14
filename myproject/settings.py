@@ -124,4 +124,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = 'C:/Tools/github/addressbook/myproject'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
