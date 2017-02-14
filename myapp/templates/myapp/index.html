@@ -26,7 +26,7 @@
     <form method="post" action="/myapp/upload/" enctype="multipart/form-data">{% csrf_token %}
         <input type="file" name="file" accept="text/csv"/>
         <input type="submit" name="submit" value="Upload CSV" />
-        CSV format:"email, name"
+        <p>CSV format:"email, name"</p>
     </form>
 </div>
 

@@ -102,6 +102,9 @@ def handleRow(row, currentRowIndex):
         if row[0].lower()=='name':
             EmailCol = 1
             NameCol = 0
+        elif row[0].lower()=='email':
+            EmailCol = 0
+            NameCol = 1
         return True
     if ifExist(row):    # existed
         return False
