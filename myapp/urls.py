@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^upload/', views.upload),
     url(r'^continue/', views.continueProcessCSV),
     url(r'^truncate/', views.truncateTable),
+    url(r'^download/', views.downloadCSV),
 ]
