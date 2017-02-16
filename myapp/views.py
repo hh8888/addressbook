@@ -10,6 +10,8 @@ from .forms import AddForm#, UploadFileForm
 from django.core.files.storage import FileSystemStorage
 from django.template.context_processors import csrf
 from django.http import HttpResponse
+from django.core.urlresolvers import resolve
+from django.http import HttpResponse
 
 #import pdb; pdb.set_trace()
 
@@ -19,6 +21,7 @@ NameCol = 1
 def addressbook(request):
     form = AddForm()
     addressList = address.objects.all()
+    appname = request.resolver_match.app_name
     return render(request, 'myapp/index.html', locals())
 
 
@@ -137,3 +140,18 @@ def handle_uploaded_file(f):
         destination.write(chunk)
     destination.close()
 
+def downloadCSV(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=addressbook.csv'
+    writer = csv.writer(response)
+    writer.writerow(['email', 'name'])
+    allAddress = address.objects.all()
+    for row in allAddress:
+        writer.writerow([row.email, row.name])  
+    return response
+
+from django.db import connection, transaction
+def truncateTable(request):
+    cursor = connection.cursor()
+    cursor.execute("TRUNCATE TABLE ADDRESS")
+    return addressbook(request)

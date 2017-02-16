@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'myapp/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static appname %}/style.css"  />
 <div class="addressbook">
     <h1>Addressbook</h1>
     <table border="1">
@@ -18,14 +18,18 @@
 </div>
 <p>
 <div class="adddiv">
-    <form method="post" action="/myapp/add/">
+    <form method="post" action="/{{appname}}/add/">
         {% csrf_token %} {{ form}}
         <input type="submit" name="add" value="Add" />
     </form>
     <br>
-    <form method="post" action="/myapp/upload/" enctype="multipart/form-data">{% csrf_token %}
+    <form method="post" action="/{{appname}}/upload/" enctype="multipart/form-data">{% csrf_token %}
         <input type="file" name="file" accept="text/csv"/>
-        <input type="submit" name="submit" value="Upload CSV" />
+        <input type="submit" name="submit" value="Upload CSV" /> 
+        <p>
+        <a href="/{{appname}}/download/">Download CSV</a> |
+        <a href="/{{appname}}/truncate/">Clear All</a>
+        </p>
         <p>CSV format:"email, name"</p>
     </form>
 </div>
